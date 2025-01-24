@@ -1,4 +1,4 @@
-DIET TRACKER 
+![image](https://github.com/user-attachments/assets/a5122695-3654-4c6a-aa4b-8cbd1d5c0cfc)DIET TRACKER 
 
 A beautiful web app to help you track daily meals and nutrition goals 
 with food search capabilities.
@@ -99,4 +99,6 @@ Nutrition Data: CalorieNinja API
 Icons: Font Awesome
 Fonts: Google Fonts
 
-Made with ❤️ by []
+Made with ❤️ 
+
+
