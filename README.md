@@ -23,6 +23,8 @@ with food search capabilities.
   - index.html (paste HTML code)
   - style.css (paste CSS code)
   - script.js (paste JavaScript code)
+  - lead-solid-ico
+  - leaf-solid-svg
 
 2. INSTALL LIVE SERVER (VS Code Extension)
 - Helps run the app locally
