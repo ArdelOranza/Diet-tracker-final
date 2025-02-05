@@ -96,6 +96,13 @@ body {
     color: var(--text-primary);
 }
 
+.logo img {
+    height: 40px;
+    width: auto;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
 .date-selector {
     display: flex;
     align-items: center;
