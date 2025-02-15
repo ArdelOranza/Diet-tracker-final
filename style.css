@@ -101,6 +101,16 @@ body {
     width: auto;
     margin-right: 10px;
     vertical-align: middle;
+    transition: opacity 0.3s ease;
+}
+
+.logo img[src*="logo-dark"],
+.logo img[src*="logo-light"] {
+    opacity: 0;
+}
+
+.logo img.loaded {
+    opacity: 1;
 }
 
 .date-selector {
