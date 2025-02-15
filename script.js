@@ -154,6 +154,14 @@ function initializeEventListeners() {
         clearSearchBtn.classList.add('hidden');
         document.getElementById('searchButton').classList.remove('hidden');
     });
+
+    // Add logo image loading handler
+    const logoImg = document.querySelector('.logo img');
+    if (logoImg) {
+        logoImg.addEventListener('load', () => {
+            logoImg.classList.add('loaded');
+        });
+    }
 }
 
 // ----- theme management -----
@@ -174,6 +182,7 @@ function setTheme(themeName) {
     document.documentElement.setAttribute('data-theme', themeName);
     localStorage.setItem(STORAGE_KEYS.THEME, themeName);
     updateThemeIcon(themeName);
+    updateLogo(themeName); // Add this line
 }
 
 function toggleTheme() {
@@ -184,6 +193,14 @@ function toggleTheme() {
 
 function updateThemeIcon(theme) {
     themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+function updateLogo(theme) {
+    const logoImg = document.querySelector('.logo img');
+    if (logoImg) {
+        logoImg.src = theme === 'dark' ? 'logo-dark.jpg' : 'logo-light.jpg';
+        logoImg.alt = 'PinasFit Tracker Logo';
+    }
 }
 
 // ----- Search functionality -----
@@ -517,7 +534,7 @@ function updateMealContainers() {
                         <div>Fat: ${item.fat}g</div>
                     </div>
                 </div>
-                <span class="food-servings">Servings: ${item.servings}</span>
+                <span class="food-servings">Servings: ${item.servings}g</span>
                 <button class="remove-btn">
                     <i class="fas fa-trash"></i>
                 </button>
@@ -672,32 +689,41 @@ function handleAddMealFormSubmit(event) {
 
     const mealType = mealTypeInput.value;
     const dishName = selectedSearchItem ? selectedSearchItem.name : dishNameInput.value;
-    const servings = Number(servingsInput.value);
+    const grams = Number(servingsInput.value);
+    let multiplier;
+
+    if (selectedSearchItem) {
+        const servingSizeGrams = selectedSearchItem.serving_size_g || 100;
+        multiplier = grams / servingSizeGrams;
+    } else {
+        // Assume custom entries are per 100g
+        multiplier = grams / 100;
+    }
+
     const caloriesPerServing = validateNutritionInput(caloriesInput.value);
     const proteinPerServing = validateNutritionInput(proteinInput.value);
     const carbsPerServing = validateNutritionInput(carbsInput.value);
     const fatPerServing = validateNutritionInput(fatInput.value);
-    const photoFile = photoInput.files[0];
 
-    const totalCalories = caloriesPerServing * servings;
-    const totalProtein = proteinPerServing * servings;
-    const totalCarbs = carbsPerServing * servings;
-    const totalFat = fatPerServing * servings;
+    const totalCalories = caloriesPerServing * multiplier;
+    const totalProtein = proteinPerServing * multiplier;
+    const totalCarbs = carbsPerServing * multiplier;
+    const totalFat = fatPerServing * multiplier;
+    const photoFile = photoInput.files[0];
     let photoBase64 = null;
 
     if (photoFile) {
-        // file size validation moved to file input change listener
         const reader = new FileReader();
         reader.onload = function (e) {
             photoBase64 = e.target.result;
-            addMealItem(mealType, dishName, totalCalories, totalProtein, totalCarbs, totalFat, servings, photoBase64);
+            addMealItem(mealType, dishName, totalCalories, totalProtein, totalCarbs, totalFat, grams, photoBase64);
         }
         reader.readAsDataURL(photoFile);
     } else {
-        addMealItem(mealType, dishName, totalCalories, totalProtein, totalCarbs, totalFat, servings, null);
+        addMealItem(mealType, dishName, totalCalories, totalProtein, totalCarbs, totalFat, grams, null);
     }
 
-   handleModal('close');
+    handleModal('close');
 }
 
 // ----- meal management -----
